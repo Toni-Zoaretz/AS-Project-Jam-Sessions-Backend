@@ -38,7 +38,7 @@ export const getUser = asyncHandler(async (req, res) => {
 });
 
 //@desc Get one User by email
-//@route GET /api/v1/jam-user/:email
+//@route GET /api/v1/jam-user/email/:email
 //@access private
 export const getUserByEmail = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email: req.params.email });
