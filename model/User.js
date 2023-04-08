@@ -29,6 +29,12 @@ const UserSchema = new mongoose.Schema(
         "Please add a valid email",
       ],
     },
+    password: {
+      type: String,
+      // required: [true, "Please add a password"],
+      minlength: [6, "Password must be at least 6 characters"],
+      select: false, // Hide the password field by default when querying the database
+    },
     jamSession_id: [
       {
         type: mongoose.Schema.Types.ObjectId,
