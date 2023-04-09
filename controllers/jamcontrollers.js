@@ -9,11 +9,36 @@ import asyncHandler from "../middleware/asyncHandler.js";
 // @access  Private
 export const getAllJamSessions = asyncHandler(async (req, res, next) => {
   const allJamSessions = await JamSession.find();
+  // .populate(
+  //   "user_id",
+  //   "name",
+  //   "phoneNumber",
+  //   "email"
+  // );
   res.status(200).json({
     success: true,
     data: allJamSessions,
   });
 });
+
+// @desc    Get  Jam Sessions between two dates
+// @route   GET /api/v1/jam-sessions/:startDate/:endDate
+// @access  Private
+export const getJamSessionFilteredByDate = asyncHandler(
+  async (req, res, next) => {
+    const { startDate, endDate } = req.params;
+    const jamSessions = await JamSession.find({
+      date: {
+        $gte: new Date(startDate),
+        $lte: new Date(endDate),
+      },
+    });
+    res.status(200).json({
+      success: true,
+      data: jamSessions,
+    });
+  }
+);
 
 // @desc    Create a Jam Session
 // @route   POST /api/v1/jam-sessions
