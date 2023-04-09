@@ -8,13 +8,7 @@ import asyncHandler from "../middleware/asyncHandler.js";
 // @route   GET /api/v1/jam-sessions
 // @access  Private
 export const getAllJamSessions = asyncHandler(async (req, res, next) => {
-  const allJamSessions = await JamSession.find();
-  // .populate(
-  //   "user_id",
-  //   "name",
-  //   "phoneNumber",
-  //   "email"
-  // );
+  const allJamSessions = await JamSession.find().populate("user_id");
   res.status(200).json({
     success: true,
     data: allJamSessions,
@@ -22,7 +16,7 @@ export const getAllJamSessions = asyncHandler(async (req, res, next) => {
 });
 
 // @desc    Get  Jam Sessions between two dates
-// @route   GET /api/v1/jam-sessions/:startDate/:endDate
+// @route   GET /api/v1/jam-sessions
 // @access  Private
 export const getJamSessionFilteredByDate = asyncHandler(
   async (req, res, next) => {
@@ -43,18 +37,38 @@ export const getJamSessionFilteredByDate = asyncHandler(
 // @desc    Create a Jam Session
 // @route   POST /api/v1/jam-sessions
 // @access  Private
+// export const createJamSession = asyncHandler(async (req, res, next) => {
+//   const userId = req.params.id;
+//   const jamSessionDetails = req.body;
+//   const createdNewJam = await JamSession.create(jamSessionDetails);
+//   const updateJamForUser = await User.findByIdAndUpdate(
+//     userId,
+//     { $push: { jamSession_id: createdNewJam.id } },
+//     { new: true }
+//   );
+//   res.status(200).json({
+//     success: true,
+//     data: updateJamForUser,
+//   });
+// });
 export const createJamSession = asyncHandler(async (req, res, next) => {
   const userId = req.params.id;
   const jamSessionDetails = req.body;
+
+  // Add the user_id to the jamSessionDetails object
+  jamSessionDetails.user_id = userId;
+
   const createdNewJam = await JamSession.create(jamSessionDetails);
-  const updateUser = await User.findByIdAndUpdate(
+
+  const updateJamForUser = await User.findByIdAndUpdate(
     userId,
     { $push: { jamSession_id: createdNewJam.id } },
     { new: true }
   );
+
   res.status(200).json({
     success: true,
-    data: updateUser,
+    data: updateJamForUser,
   });
 });
 

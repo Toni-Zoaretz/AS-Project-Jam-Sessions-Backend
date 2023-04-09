@@ -34,13 +34,11 @@ const JamSessionSchema = mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  // user_id: [
-  //   {
-  //     type: mongoose.Schema.Types.ObjectId,
-  //     required: true,
-  //     ref: "User",
-  //   },
-  // ],
+  user_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: "JamUsers",
+  },
 });
 
 // Geocode & create location field
