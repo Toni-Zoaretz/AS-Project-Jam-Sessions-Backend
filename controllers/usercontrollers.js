@@ -49,6 +49,18 @@ export const getUserByEmail = asyncHandler(async (req, res) => {
   res.status(200).json(user);
 });
 
+//@desc Get one User by name
+//@route GET /api/v1/jam-user/name/:name
+//@access private
+export const getUserByName = asyncHandler(async (req, res) => {
+  const user = await User.findOne({ name: req.params.name });
+  if (!user) {
+    res.status(404);
+    throw new Error("User not found");
+  }
+  res.status(200).json(user);
+});
+
 //@desc Update User
 //@route PUT /api/v1/jam-user/:id
 //@access private
