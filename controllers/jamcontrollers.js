@@ -15,7 +15,7 @@ export const getAllJamSessions = asyncHandler(async (req, res, next) => {
   });
 });
 
-// @desc    Get  Jam Sessions between two dates
+// @desc    Get  Jam Sessions Filtered by dates
 // @route   GET /api/v1/jam-sessions
 // @access  Private
 export const getJamSessionFilteredByDate = asyncHandler(
@@ -26,7 +26,7 @@ export const getJamSessionFilteredByDate = asyncHandler(
         $gte: new Date(startDate),
         $lte: new Date(endDate),
       },
-    });
+    }).populate("user_id");
     res.status(200).json({
       success: true,
       data: jamSessions,
