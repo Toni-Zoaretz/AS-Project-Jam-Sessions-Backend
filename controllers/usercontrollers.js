@@ -41,7 +41,9 @@ export const getUser = asyncHandler(async (req, res) => {
 //@route GET /api/v1/jam-user/email/:email
 //@access private
 export const getUserByEmail = asyncHandler(async (req, res) => {
-  const user = await User.findOne({ email: req.params.email });
+  const user = await User.findOne({ email: req.params.email }).populate({
+    path: "jamSession_id",
+  });
   if (!user) {
     res.status(404);
     throw new Error("User not found");
