@@ -15,6 +15,20 @@ export const getAllJamSessions = asyncHandler(async (req, res, next) => {
   });
 });
 
+//@desc Get one Jam Session by name
+//@route GET /api/v1/jam-sessions/name/:name
+//@access private
+export const getOneJamSessionByName = asyncHandler(async (req, res) => {
+  const jamSession = await JamSession.findOne({
+    jamSessionName: req.params.jamSessionName,
+  });
+  if (!jamSession) {
+    res.status(404);
+    throw new Error("Jam Session not found");
+  }
+  res.status(200).json(jamSession);
+});
+
 // @desc    Get  Jam Sessions Filtered by dates
 // @route   GET /api/v1/jam-sessions
 // @access  Private
