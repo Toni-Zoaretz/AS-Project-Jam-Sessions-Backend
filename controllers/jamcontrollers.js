@@ -16,7 +16,7 @@ export const getAllJamSessions = asyncHandler(async (req, res, next) => {
 });
 
 //@desc Get one Jam Session by name
-//@route GET /api/v1/jam-sessions/name/:name
+//@route GET /api/v1/jam-sessions//name/:jamSessionName
 //@access private
 export const getOneJamSessionByName = asyncHandler(async (req, res) => {
   const jamSession = await JamSession.findOne({
@@ -109,6 +109,26 @@ export const deleteJamSession = asyncHandler(async (req, res, next) => {
 // @desc    Update a Jam Session
 // @route   PUT /api/v1/jam-sessions/:id
 // @access  Private
+// export const updateJamSession = asyncHandler(async (req, res, next) => {
+//   const jamSessionId = req.params.id;
+//   const updates = req.body;
+
+//   const jamSession = await JamSession.findById(jamSessionId);
+
+//   if (!jamSession) {
+//     throw new Error("Jam Session not found");
+//   }
+
+//   const updatedJamSession = await JamSession.updateOne(
+//     { _id: jamSessionId },
+//     { $set: updates, $currentDate: { lastUpdated: true } }
+//   );
+//   res.status(200).json({
+//     success: true,
+//     data: updatedJamSession,
+//   });
+// });
+
 export const updateJamSession = asyncHandler(async (req, res, next) => {
   const jamSessionId = req.params.id;
   const updates = req.body;
@@ -119,10 +139,22 @@ export const updateJamSession = asyncHandler(async (req, res, next) => {
     throw new Error("Jam Session not found");
   }
 
-  const updatedJamSession = await JamSession.updateOne(
-    { _id: jamSessionId },
-    { $set: updates, $currentDate: { lastUpdated: true } }
-  );
+  // Update the address and location fields
+  jamSession.address = updates.address;
+  const loc = await geocoder.geocode(jamSession.address);
+  jamSession.location = {
+    type: "Point",
+    coordinates: [loc[0].longitude, loc[0].latitude],
+    formattedAddress: loc[0].formattedAddress,
+    street: loc[0].streetName,
+    city: loc[0].city,
+    state: loc[0].stateCode,
+    zipcode: loc[0].zipcode,
+    country: loc[0].countryCode,
+  };
+
+  const updatedJamSession = await jamSession.save();
+
   res.status(200).json({
     success: true,
     data: updatedJamSession,
