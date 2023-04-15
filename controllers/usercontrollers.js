@@ -29,7 +29,9 @@ export const createUser = asyncHandler(async (req, res, next) => {
 //@route GET /api/v1/jam-user/:id
 //@access private
 export const getUser = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.params.id);
+  const user = await User.findById(req.params.id).populate({
+    path: "jamSession_id",
+  });
   if (!user) {
     res.status(404);
     throw new Error("User not found");
