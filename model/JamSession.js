@@ -56,7 +56,7 @@ JamSessionSchema.pre("save", async function (next) {
   };
 
   // Do not save address in database
-  this.address = undefined;
+  // this.address = undefined;
 
   next();
 });
